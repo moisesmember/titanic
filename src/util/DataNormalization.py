@@ -25,15 +25,13 @@ class DataNormalization:
         y = df[y_col]
         X = df.drop(columns=y_col)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=size, random_state=42)
-        cols = X.columns
-        num_cols = [
-            "pclass", "age", "sibsp", "parch", "fare"
-        ]
+        num_cols = X.select_dtypes(include=['number']).columns
         fi = enable_iterative_imputer.IterativeImputer()
         X_train.loc[:, num_cols] = fi.fit_transform(X_train[num_cols])
         X_test.loc[:, num_cols] = fi.fit_transform(X_test[num_cols])
 
         if std_cols:
+            print(std_cols)
             std = preprocessing.StandardScaler()
             assert X_train[std_cols].select_dtypes(include='number').equals(
                 X_train[std_cols]), "Not all columns in std_cols are numeric"

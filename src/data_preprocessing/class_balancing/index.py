@@ -36,4 +36,4 @@ def class_balance(X: pd.DataFrame, y: pd.DataFrame):
     print("\nContagem das classes após a aplicação do SMOTE:")
     print(pd.Series(y_smote).value_counts())
 
-    #print(X_smote)
+    return X_smote, y_smote

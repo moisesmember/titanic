@@ -3,6 +3,7 @@ from sklearn import ensemble
 from sklearn.linear_model import LinearRegression
 from src.data_preprocessing.class_balancing.index import class_balance
 from src.data_preprocessing.columns.index import correlated_columns, lasso_graph, recursive_attribute_deletion
+from src.ml.classification.classification import classification
 from src.util.BaseModelAnalysis import BaseModelAnalysis
 from src.util.DataNormalization import DataNormalization
 
@@ -23,8 +24,13 @@ def preprocessing(df: pd.DataFrame):
 
     model = ensemble.RandomForestClassifier(n_estimators=100)
     columns_selected = recursive_attribute_deletion(X, y, model)
-    print(columns_selected)
 
-    print(X[columns_selected])
+    X_smote, y_smote = class_balance(X, y)
 
-    class_balance(X, y)
+    new_data = pd.concat([X_smote[columns_selected], y_smote], axis=1)
+
+    print(df.survived.value_counts())
+    print(new_data.survived.value_counts())
+
+    classification(new_data, columns_selected)
+
